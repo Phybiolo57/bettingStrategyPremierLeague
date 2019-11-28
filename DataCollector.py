@@ -107,26 +107,27 @@ final_output.to_csv(r'/home/soumava/PycharmProjects/fifa football predictor/data
 # names = ps.sqldf(q1,locals())
 
 # q2 = """SELECT player_name,club_name from club_data"""
-players = pd.DataFrame()
+
+eight_match_stats = pd.DataFrame()
+eight_match_stats = pd.read_csv('data/new_match.csv',',')
 
 
-str = "SELECT player_name,club_name from club_data where player_name = '%s'"
-#Fetch the clubs for which they are playing
-# for index, row in names.iterrows():
-#     str = (str %names[row['Name']])
-#     players.append(ps.sqldf(str, globals()), ignore_index=True)
+q3 = """select
+  HomeTeam,
+  AwayTeam,
+  case WHEN FTR = 'H' THEN "1" WHEN FTR = 'A' THEN "2" ELSE "3" END as HT
+from
+  eight_match_stats"""
+stats = ps.sqldf(q3,locals())
 
-# making boolean series for a team name
-#
-# filter = data['first_name'] == 'David' and data['second_name'] == 'Ospina'
-# filtered = data.where(filter, inplace = False)
-# filtering data
-# data.where(filter, inplace=True)
-# names = []
+q4 = """select
+  op.HT
+from
+  stats op
+  inner join final_output dt on ( op.HomeTeam = dt.HT and op.AwayTeam = dt.AT)
+"""
+result_data = ps.sqldf(q4,locals())
 
-
-print(data.head())
-
-
+print('Hello')
 # ['Chelsea','Man United','Arsenal','Man City','Tottenham','Liverpool','Everton','West Ham','Leicester','Southampton','Crystal Palace'
 # ,'Stoke','Swansea','Watford','Newcastle','West Brom','Bournemouth','Brighton','Burnley','Huddersfield']
